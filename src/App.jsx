@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import {
-  BrowserRouter,
   Routes,
   Route,
   Link,
   useLocation,
   useNavigate,
 } from "react-router-dom";
+
 import {
   Search,
   Bell,
@@ -23,12 +23,15 @@ import {
   Menu,
   X,
   ArrowLeft,
-  Info,
+  Clock,
+  Eye,
+  Sparkles,
 } from "lucide-react";
+
 import "./App.css";
 
 /* =========================================================
-   DATA
+   MOVIES
 ========================================================= */
 
 const movies = [
@@ -38,6 +41,7 @@ const movies = [
     year: 2024,
     genre: "Sci-Fi",
     rating: 8.6,
+    duration: "2h 46m",
     image:
       "https://image.tmdb.org/t/p/original/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg",
     description:
@@ -49,6 +53,7 @@ const movies = [
     year: 2023,
     genre: "Drama",
     rating: 8.6,
+    duration: "3h",
     image:
       "https://image.tmdb.org/t/p/w780/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg",
     description:
@@ -60,6 +65,7 @@ const movies = [
     year: 2022,
     genre: "Crime",
     rating: 7.8,
+    duration: "2h 56m",
     image:
       "https://image.tmdb.org/t/p/w780/74xTEgt7R36Fpooo50r9T25onhq.jpg",
     description:
@@ -71,6 +77,7 @@ const movies = [
     year: 2014,
     genre: "Adventure",
     rating: 8.7,
+    duration: "2h 49m",
     image:
       "https://image.tmdb.org/t/p/w780/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
     description:
@@ -82,6 +89,7 @@ const movies = [
     year: 2021,
     genre: "Action",
     rating: 8.0,
+    duration: "2h 28m",
     image:
       "https://image.tmdb.org/t/p/w780/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg",
     description:
@@ -93,6 +101,7 @@ const movies = [
     year: 2022,
     genre: "Fantasy",
     rating: 7.6,
+    duration: "3h 12m",
     image:
       "https://image.tmdb.org/t/p/w780/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg",
     description:
@@ -104,6 +113,7 @@ const movies = [
     year: 2019,
     genre: "Action",
     rating: 8.3,
+    duration: "3h 2m",
     image:
       "https://image.tmdb.org/t/p/w780/or06FN3Dka5tukK1e9sl16pB3iy.jpg",
     description:
@@ -115,12 +125,17 @@ const movies = [
     year: 2014,
     genre: "Action",
     rating: 7.4,
+    duration: "1h 41m",
     image:
       "https://image.tmdb.org/t/p/w780/fZPSd91yGE9fCcCe6OoQr6E3Bev.jpg",
     description:
       "An ex-hitman is forced back into the criminal underworld after a personal tragedy.",
   },
 ];
+
+/* =========================================================
+   SERIES
+========================================================= */
 
 const series = [
   {
@@ -129,6 +144,7 @@ const series = [
     year: 2016,
     genre: "Sci-Fi",
     rating: 8.6,
+    seasons: "4 Seasons",
     image:
       "https://image.tmdb.org/t/p/w780/x2LSRK2Cm7MZhjluni1msVJ3wDF.jpg",
     description:
@@ -140,6 +156,7 @@ const series = [
     year: 2023,
     genre: "Drama",
     rating: 8.6,
+    seasons: "2 Seasons",
     image:
       "https://image.tmdb.org/t/p/w780/uKvVjHNqB5VmOrdxqAt2F7J78ED.jpg",
     description:
@@ -151,6 +168,7 @@ const series = [
     year: 2022,
     genre: "Mystery",
     rating: 8.0,
+    seasons: "2 Seasons",
     image:
       "https://image.tmdb.org/t/p/w780/9PFonBhy4cQy7Jz20NpMygczOkv.jpg",
     description:
@@ -162,6 +180,7 @@ const series = [
     year: 2022,
     genre: "Fantasy",
     rating: 8.4,
+    seasons: "2 Seasons",
     image:
       "https://image.tmdb.org/t/p/w780/7QMsOTMUswlwxJP0rTTZfmz2tX2.jpg",
     description:
@@ -173,6 +192,7 @@ const series = [
     year: 2019,
     genre: "Action",
     rating: 8.7,
+    seasons: "4 Seasons",
     image:
       "https://image.tmdb.org/t/p/w780/stTEycfG9928HYGEISBFaG1ngjM.jpg",
     description:
@@ -184,12 +204,17 @@ const series = [
     year: 2008,
     genre: "Crime",
     rating: 9.5,
+    seasons: "5 Seasons",
     image:
       "https://image.tmdb.org/t/p/w780/ztkUQFLlC19CCMYHW9o1zWhJRNq.jpg",
     description:
       "A chemistry teacher turns to manufacturing methamphetamine after receiving a devastating diagnosis.",
   },
 ];
+
+/* =========================================================
+   STORIES
+========================================================= */
 
 const stories = [
   {
@@ -198,6 +223,7 @@ const stories = [
     genre: "Werewolf Romance",
     rating: 4.9,
     views: "2.4M",
+    chapters: 86,
     image:
       "https://images.unsplash.com/photo-1511108690759-009324a90311?w=1000&q=85",
     description:
@@ -209,6 +235,7 @@ const stories = [
     genre: "Billionaire Romance",
     rating: 4.8,
     views: "1.8M",
+    chapters: 72,
     image:
       "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=1000&q=85",
     description:
@@ -220,6 +247,7 @@ const stories = [
     genre: "Fantasy",
     rating: 4.7,
     views: "954K",
+    chapters: 64,
     image:
       "https://images.unsplash.com/photo-1532012197267-da84d127e765?w=1000&q=85",
     description:
@@ -231,6 +259,7 @@ const stories = [
     genre: "Vampire Romance",
     rating: 4.9,
     views: "1.2M",
+    chapters: 91,
     image:
       "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=1000&q=85",
     description:
@@ -242,6 +271,7 @@ const stories = [
     genre: "Royal Romance",
     rating: 4.8,
     views: "731K",
+    chapters: 58,
     image:
       "https://images.unsplash.com/photo-1544947950-fa07a98d2374?w=1000&q=85",
     description:
@@ -253,6 +283,7 @@ const stories = [
     genre: "Enemies to Lovers",
     rating: 4.9,
     views: "1.5M",
+    chapters: 77,
     image:
       "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=1000&q=85",
     description:
@@ -282,76 +313,88 @@ function Header() {
   const submitSearch = (e) => {
     e.preventDefault();
 
-    if (!search.trim()) return;
+    const value = search.trim();
 
-    navigate(`/search?q=${encodeURIComponent(search.trim())}`);
-    setSearchOpen(false);
+    if (!value) return;
+
+    navigate(`/search?q=${encodeURIComponent(value)}`);
+
     setSearch("");
+    setSearchOpen(false);
+    setMobileOpen(false);
   };
 
   return (
-    <>
-      <header className="site-header">
-        <div className="header-inner">
-          <Link to="/" className="logo">
-            STORY<span>FLIX</span>
-          </Link>
+    <header className="site-header">
+      <div className="header-inner">
+        <Link to="/" className="logo">
+          STORY<span>FLIX</span>
+        </Link>
 
-          <nav className={`main-nav ${mobileOpen ? "mobile-active" : ""}`}>
-            {links.map((link) => (
+        <nav className={`main-nav ${mobileOpen ? "mobile-active" : ""}`}>
+          {links.map((link) => {
+            const active =
+              link.path === "/"
+                ? location.pathname === "/"
+                : location.pathname.startsWith(link.path);
+
+            return (
               <Link
                 key={link.path}
                 to={link.path}
-                className={location.pathname === link.path ? "active" : ""}
+                className={active ? "active" : ""}
                 onClick={() => setMobileOpen(false)}
               >
                 {link.name}
               </Link>
-            ))}
-          </nav>
+            );
+          })}
+        </nav>
 
-          <div className="header-actions">
-            <button
-              className="icon-btn"
-              onClick={() => setSearchOpen(!searchOpen)}
-              aria-label="Search"
-            >
-              {searchOpen ? <X size={20} /> : <Search size={20} />}
-            </button>
+        <div className="header-actions">
+          <button
+            className="icon-btn"
+            onClick={() => setSearchOpen(!searchOpen)}
+            aria-label="Search"
+          >
+            {searchOpen ? <X size={20} /> : <Search size={20} />}
+          </button>
 
-            <button className="icon-btn desktop-only">
-              <Bell size={20} />
-            </button>
+          <button className="icon-btn desktop-only">
+            <Bell size={20} />
+          </button>
 
-            <button className="profile-btn desktop-only">
-              <User size={18} />
-            </button>
+          <button className="profile-btn desktop-only">
+            <User size={18} />
+          </button>
 
-            <button
-              className="mobile-menu"
-              onClick={() => setMobileOpen(!mobileOpen)}
-            >
-              {mobileOpen ? <X /> : <Menu />}
-            </button>
-          </div>
+          <button
+            className="mobile-menu"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Menu"
+          >
+            {mobileOpen ? <X /> : <Menu />}
+          </button>
         </div>
+      </div>
 
-        {searchOpen && (
-          <div className="search-panel">
-            <form onSubmit={submitSearch}>
-              <Search size={20} />
-              <input
-                autoFocus
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search movies, series and stories..."
-              />
-              <button type="submit">Search</button>
-            </form>
-          </div>
-        )}
-      </header>
-    </>
+      {searchOpen && (
+        <div className="search-panel">
+          <form onSubmit={submitSearch}>
+            <Search size={20} />
+
+            <input
+              autoFocus
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search movies, series and stories..."
+            />
+
+            <button type="submit">Search</button>
+          </form>
+        </div>
+      )}
+    </header>
   );
 }
 
@@ -362,12 +405,14 @@ function Header() {
 function Hero() {
   const [myList, setMyList] = useState(false);
 
+  const movie = movies[0];
+
   return (
     <section className="hero">
       <div
         className="hero-backdrop"
         style={{
-          backgroundImage: `url(${movies[0].image})`,
+          backgroundImage: `url(${movie.image})`,
         }}
       />
 
@@ -376,28 +421,26 @@ function Hero() {
       <div className="hero-content">
         <div className="hero-label">
           <span>FEATURED</span>
+
           <span className="hero-rating">
             <Star size={14} fill="currentColor" />
-            8.6
+            {movie.rating}
           </span>
         </div>
 
-        <h1>Dune: Part Two</h1>
+        <h1>{movie.title}</h1>
 
         <div className="hero-meta">
-          <span>2024</span>
-          <span>2h 46m</span>
-          <span>Sci-Fi</span>
+          <span>{movie.year}</span>
+          <span>{movie.duration}</span>
+          <span>{movie.genre}</span>
           <span className="quality">4K</span>
         </div>
 
-        <p>
-          Paul Atreides unites with Chani and the Fremen while seeking revenge
-          against the conspirators who destroyed his family.
-        </p>
+        <p>{movie.description}</p>
 
         <div className="hero-buttons">
-          <Link to="/movies/1" className="primary-btn">
+          <Link to={`/movies/${movie.id}`} className="primary-btn">
             <Play size={19} fill="currentColor" />
             Watch Now
           </Link>
@@ -407,6 +450,7 @@ function Hero() {
             onClick={() => setMyList(!myList)}
           >
             {myList ? <Check size={19} /> : <Plus size={19} />}
+
             {myList ? "Added" : "My List"}
           </button>
         </div>
@@ -418,23 +462,29 @@ function Hero() {
 }
 
 /* =========================================================
-   CONTENT CARD
+   MEDIA CARD
 ========================================================= */
 
 function MediaCard({ item, type }) {
+  const isStory = type === "stories";
+
   return (
     <Link
       to={`/${type}/${item.id}`}
       className="media-card"
     >
       <div className="card-image-wrap">
-        <img src={item.image} alt={item.title} loading="lazy" />
+        <img
+          src={item.image}
+          alt={item.title}
+          loading="lazy"
+        />
 
         <div className="card-gradient" />
 
         <div className="card-hover">
           <div className="play-circle">
-            {type === "stories" ? (
+            {isStory ? (
               <BookOpen size={20} fill="currentColor" />
             ) : (
               <Play size={20} fill="currentColor" />
@@ -452,7 +502,7 @@ function MediaCard({ item, type }) {
         <h3>{item.title}</h3>
 
         <div className="card-meta">
-          {type === "stories" ? (
+          {isStory ? (
             <>
               <span>{item.genre}</span>
               <span>•</span>
@@ -475,17 +525,29 @@ function MediaCard({ item, type }) {
    CONTENT ROW
 ========================================================= */
 
-function ContentRow({ title, items, type, seeAll = true }) {
+function ContentRow({
+  title,
+  items,
+  type,
+  kicker = "DISCOVER",
+  seeAll = true,
+}) {
   return (
     <section className="content-section">
       <div className="section-heading">
         <div>
-          <span className="section-kicker">DISCOVER</span>
+          <span className="section-kicker">
+            {kicker}
+          </span>
+
           <h2>{title}</h2>
         </div>
 
         {seeAll && (
-          <Link to={`/${type}`} className="see-all">
+          <Link
+            to={`/${type}`}
+            className="see-all"
+          >
             See all
             <ChevronRight size={17} />
           </Link>
@@ -494,7 +556,11 @@ function ContentRow({ title, items, type, seeAll = true }) {
 
       <div className="card-row">
         {items.map((item) => (
-          <MediaCard key={item.id} item={item} type={type} />
+          <MediaCard
+            key={item.id}
+            item={item}
+            type={type}
+          />
         ))}
       </div>
     </section>
@@ -507,7 +573,7 @@ function ContentRow({ title, items, type, seeAll = true }) {
 
 function Home() {
   return (
-    <div>
+    <>
       <Hero />
 
       <main className="page-content">
@@ -524,19 +590,36 @@ function Home() {
         />
 
         <section className="story-feature">
-          <div className="story-feature-bg" />
+          <div
+            className="story-feature-bg"
+            style={{
+              backgroundImage: `url(${stories[0].image})`,
+            }}
+          />
+
+          <div className="story-feature-overlay" />
 
           <div className="story-feature-content">
-            <span className="section-kicker">STORYFLIX ORIGINAL</span>
+            <span className="section-kicker">
+              STORYFLIX ORIGINAL
+            </span>
 
-            <h2>Stories that keep you turning the page.</h2>
+            <h2>
+              Stories that keep you
+              <br />
+              turning the page.
+            </h2>
 
             <p>
-              Discover addictive romance, fantasy, supernatural and drama
-              stories from writers around the world.
+              Discover addictive romance, fantasy,
+              supernatural and drama stories from
+              writers around the world.
             </p>
 
-            <Link to="/stories" className="primary-btn">
+            <Link
+              to="/stories"
+              className="primary-btn"
+            >
               <BookOpen size={18} />
               Explore Stories
             </Link>
@@ -549,26 +632,49 @@ function Home() {
           type="stories"
         />
       </main>
-    </div>
+    </>
   );
 }
 
 /* =========================================================
-   LIST PAGE
+   LISTING PAGE
 ========================================================= */
 
-function ListingPage({ title, items, type, description }) {
+function ListingPage({
+  title,
+  items,
+  type,
+  description,
+}) {
   return (
     <main className="listing-page">
       <div className="listing-header">
-        <span className="section-kicker">STORYFLIX</span>
+        <span className="section-kicker">
+          STORYFLIX
+        </span>
+
         <h1>{title}</h1>
+
         <p>{description}</p>
+      </div>
+
+      <div className="filter-bar">
+        <button className="filter-active">
+          All
+        </button>
+
+        <button>Popular</button>
+        <button>Newest</button>
+        <button>Top Rated</button>
       </div>
 
       <div className="large-card-grid">
         {items.map((item) => (
-          <MediaCard key={item.id} item={item} type={type} />
+          <MediaCard
+            key={item.id}
+            item={item}
+            type={type}
+          />
         ))}
       </div>
     </main>
@@ -584,6 +690,7 @@ function DetailPage({ item, type }) {
   const navigate = useNavigate();
 
   const isStory = type === "stories";
+  const isSeries = type === "series";
 
   return (
     <main className="detail-page">
@@ -605,28 +712,33 @@ function DetailPage({ item, type }) {
         </button>
 
         <div className="detail-content">
-          <div className="detail-type">
-            {isStory ? (
-              <>
-                <BookOpen size={15} />
-                Story
-              </>
-            ) : type === "series" ? (
-              <>
-                <Tv size={15} />
-                Series
-              </>
-            ) : (
-              <>
-                <Film size={15} />
-                Movie
-              </>
-            )}
-          </div>
+          <div className="detail-topline">
+            <div className="detail-type">
+              {isStory ? (
+                <>
+                  <BookOpen size={15} />
+                  Story
+                </>
+              ) : isSeries ? (
+                <>
+                  <Tv size={15} />
+                  Series
+                </>
+              ) : (
+                <>
+                  <Film size={15} />
+                  Movie
+                </>
+              )}
+            </div>
 
-          <div className="detail-rating">
-            <Star size={16} fill="currentColor" />
-            {item.rating}
+            <div className="detail-rating">
+              <Star
+                size={16}
+                fill="currentColor"
+              />
+              {item.rating}
+            </div>
           </div>
 
           <h1>{item.title}</h1>
@@ -637,6 +749,8 @@ function DetailPage({ item, type }) {
                 <span>{item.genre}</span>
                 <span>•</span>
                 <span>{item.views} views</span>
+                <span>•</span>
+                <span>{item.chapters} chapters</span>
               </>
             ) : (
               <>
@@ -644,7 +758,11 @@ function DetailPage({ item, type }) {
                 <span>•</span>
                 <span>{item.genre}</span>
                 <span>•</span>
-                <span>{type === "series" ? "TV Series" : "Movie"}</span>
+                <span>
+                  {isSeries
+                    ? item.seasons
+                    : item.duration}
+                </span>
               </>
             )}
           </div>
@@ -667,7 +785,10 @@ function DetailPage({ item, type }) {
                 </>
               ) : (
                 <>
-                  <Play size={18} fill="currentColor" />
+                  <Play
+                    size={18}
+                    fill="currentColor"
+                  />
                   Watch Trailer
                 </>
               )}
@@ -675,10 +796,19 @@ function DetailPage({ item, type }) {
 
             <button
               className="secondary-btn"
-              onClick={() => setMyList(!myList)}
+              onClick={() =>
+                setMyList(!myList)
+              }
             >
-              {myList ? <Check size={18} /> : <Plus size={18} />}
-              {myList ? "In My List" : "My List"}
+              {myList ? (
+                <Check size={18} />
+              ) : (
+                <Plus size={18} />
+              )}
+
+              {myList
+                ? "In My List"
+                : "My List"}
             </button>
           </div>
         </div>
@@ -686,24 +816,45 @@ function DetailPage({ item, type }) {
 
       <section className="detail-body">
         <div className="detail-overview">
-          <span className="section-kicker">OVERVIEW</span>
-          <h2>About this {isStory ? "story" : "title"}</h2>
+          <span className="section-kicker">
+            OVERVIEW
+          </span>
+
+          <h2>
+            About this{" "}
+            {isStory ? "story" : "title"}
+          </h2>
+
           <p>{item.description}</p>
         </div>
 
         <div className="info-box">
           <div>
-            <span>Release</span>
-            <strong>{item.year || "Ongoing"}</strong>
+            <span>
+              {isStory
+                ? "Chapters"
+                : "Release"}
+            </span>
+
+            <strong>
+              {isStory
+                ? item.chapters
+                : item.year}
+            </strong>
           </div>
 
           <div>
             <span>Rating</span>
-            <strong>{item.rating}/10</strong>
+
+            <strong>
+              {item.rating}
+              {isStory ? "/5" : "/10"}
+            </strong>
           </div>
 
           <div>
             <span>Genre</span>
+
             <strong>{item.genre}</strong>
           </div>
         </div>
@@ -712,8 +863,24 @@ function DetailPage({ item, type }) {
       <section className="detail-recommendations">
         <ContentRow
           title="You May Also Like"
-          items={isStory ? stories : type === "series" ? series : movies}
+          items={
+            isStory
+              ? stories.filter(
+                  (story) =>
+                    story.id !== item.id
+                )
+              : isSeries
+              ? series.filter(
+                  (show) =>
+                    show.id !== item.id
+                )
+              : movies.filter(
+                  (movie) =>
+                    movie.id !== item.id
+                )
+          }
           type={type}
+          kicker="RECOMMENDED"
         />
       </section>
     </main>
@@ -724,15 +891,22 @@ function DetailPage({ item, type }) {
    STORY READER
 ========================================================= */
 
-function StoryReader({ story }) {
+function StoryReader({ story, chapter = 1 }) {
   const navigate = useNavigate();
+
+  const chapterTitles = {
+    1: "The Bond That Should Never Have Been",
+    2: "The Alpha's Secret",
+  };
 
   return (
     <main className="reader-page">
       <div className="reader-top">
         <button
           className="back-button dark"
-          onClick={() => navigate(`/stories/${story.id}`)}
+          onClick={() =>
+            navigate(`/stories/${story.id}`)
+          }
         >
           <ArrowLeft size={18} />
           Story Details
@@ -749,62 +923,131 @@ function StoryReader({ story }) {
       </div>
 
       <article className="chapter">
-        <div className="chapter-number">CHAPTER ONE</div>
+        <div className="chapter-number">
+          CHAPTER {chapter === 1 ? "ONE" : "TWO"}
+        </div>
 
-        <h1>The Bond That Should Never Have Been</h1>
+        <h1>
+          {chapterTitles[chapter] ||
+            "The Next Chapter"}
+        </h1>
 
         <div className="chapter-divider" />
 
-        <p>
-          The night the moon turned red, everyone in the kingdom knew
-          something had changed.
-        </p>
+        {chapter === 1 ? (
+          <>
+            <p>
+              The night the moon turned red,
+              everyone in the kingdom knew
+              something had changed.
+            </p>
 
-        <p>
-          I felt it before I saw it.
-        </p>
+            <p>
+              I felt it before I saw it.
+            </p>
 
-        <p>
-          A strange pressure settled over my chest as I stood at the edge of
-          the forest, staring at the silver light spilling between the trees.
-          The wolves had gone silent.
-        </p>
+            <p>
+              A strange pressure settled over my
+              chest as I stood at the edge of the
+              forest, staring at the silver light
+              spilling between the trees.
+            </p>
 
-        <p>
-          Then I heard footsteps behind me.
-        </p>
+            <p>
+              The wolves had gone silent.
+            </p>
 
-        <p>
-          I turned slowly.
-        </p>
+            <p>
+              Then I heard footsteps behind me.
+            </p>
 
-        <p>
-          He stood beneath the moonlight, watching me with an expression I
-          could not understand.
-        </p>
+            <p>
+              I turned slowly.
+            </p>
 
-        <p>
-          The Alpha.
-        </p>
+            <p>
+              He stood beneath the moonlight,
+              watching me with an expression I
+              could not understand.
+            </p>
 
-        <p>
-          And somehow, despite everything I had been taught, I knew exactly
-          what he was.
-        </p>
+            <p>
+              The Alpha.
+            </p>
 
-        <p className="chapter-ending">
-          My forbidden mate.
-        </p>
+            <p>
+              And somehow, despite everything I
+              had been taught, I knew exactly what
+              he was.
+            </p>
+
+            <p className="chapter-ending">
+              My forbidden mate.
+            </p>
+          </>
+        ) : (
+          <>
+            <p>
+              I couldn't move.
+            </p>
+
+            <p>
+              The forest seemed to hold its
+              breath around us.
+            </p>
+
+            <p>
+              He stepped closer, but I refused
+              to step back.
+            </p>
+
+            <p>
+              "You shouldn't be here," he said.
+            </p>
+
+            <p>
+              His voice was calm, but there was
+              something beneath it.
+            </p>
+
+            <p>
+              Fear.
+            </p>
+
+            <p>
+              That was the moment I realized the
+              Alpha wasn't afraid of me.
+            </p>
+
+            <p className="chapter-ending">
+              He was afraid of what our bond
+              would awaken.
+            </p>
+          </>
+        )}
 
         <div className="chapter-navigation">
-          <button disabled>
+          <button
+            disabled={chapter <= 1}
+            onClick={() =>
+              navigate(
+                `/stories/${story.id}/chapter/${
+                  chapter - 1
+                }`
+              )
+            }
+          >
             <ChevronLeft size={18} />
             Previous
           </button>
 
           <button
             onClick={() =>
-              navigate(`/stories/${story.id}/chapter/2`)
+              navigate(
+                `/stories/${story.id}/chapter/${
+                  chapter + 1
+                }`
+              )
             }
             className="primary-btn"
           >
@@ -818,17 +1061,33 @@ function StoryReader({ story }) {
 }
 
 /* =========================================================
-   SEARCH
+   SEARCH PAGE
 ========================================================= */
 
 function SearchPage() {
-  const params = new URLSearchParams(window.location.search);
+  const location = useLocation();
+
+  const params = new URLSearchParams(
+    location.search
+  );
+
   const query = params.get("q") || "";
 
   const allItems = [
-    ...movies.map((x) => ({ ...x, type: "movies" })),
-    ...series.map((x) => ({ ...x, type: "series" })),
-    ...stories.map((x) => ({ ...x, type: "stories" })),
+    ...movies.map((item) => ({
+      ...item,
+      type: "movies",
+    })),
+
+    ...series.map((item) => ({
+      ...item,
+      type: "series",
+    })),
+
+    ...stories.map((item) => ({
+      ...item,
+      type: "stories",
+    })),
   ];
 
   const results = allItems.filter((item) =>
@@ -840,13 +1099,22 @@ function SearchPage() {
   return (
     <main className="listing-page">
       <div className="listing-header">
-        <span className="section-kicker">SEARCH</span>
+        <span className="section-kicker">
+          SEARCH
+        </span>
 
         <h1>
-          Results for <span>"{query}"</span>
+          Results for{" "}
+          <span>"{query}"</span>
         </h1>
 
-        <p>{results.length} results found</p>
+        <p>
+          {results.length}{" "}
+          {results.length === 1
+            ? "result"
+            : "results"}{" "}
+          found
+        </p>
       </div>
 
       {results.length > 0 ? (
@@ -861,9 +1129,21 @@ function SearchPage() {
         </div>
       ) : (
         <div className="empty-state">
-          <Search size={40} />
+          <Search size={42} />
+
           <h2>No results found</h2>
-          <p>Try searching for another movie, series or story.</p>
+
+          <p>
+            Try searching for another movie,
+            series or story.
+          </p>
+
+          <Link
+            to="/"
+            className="primary-btn"
+          >
+            Back Home
+          </Link>
         </div>
       )}
     </main>
@@ -878,35 +1158,80 @@ function Footer() {
   return (
     <footer className="footer">
       <div className="footer-inner">
-        <div>
-          <Link to="/" className="logo">
+        <div className="footer-brand">
+          <Link
+            to="/"
+            className="logo"
+          >
             STORY<span>FLIX</span>
           </Link>
 
           <p>
-            Your home for unforgettable movies, series and stories.
+            Your home for unforgettable movies,
+            series and stories.
           </p>
+
+          <div className="footer-socials">
+            <span>f</span>
+            <span>𝕏</span>
+            <span>◎</span>
+            <span>▶</span>
+          </div>
         </div>
 
         <div className="footer-links">
           <div>
             <strong>Explore</strong>
-            <Link to="/movies">Movies</Link>
-            <Link to="/series">Series</Link>
-            <Link to="/stories">Stories</Link>
+
+            <Link to="/movies">
+              Movies
+            </Link>
+
+            <Link to="/series">
+              Series
+            </Link>
+
+            <Link to="/stories">
+              Stories
+            </Link>
           </div>
 
           <div>
-            <strong>StoryFlix</strong>
-            <a href="#">About</a>
-            <a href="#">Privacy</a>
-            <a href="#">Terms</a>
+            <strong>Company</strong>
+
+            <a href="#about">About</a>
+
+            <a href="#contact">Contact</a>
+
+            <a href="#careers">Careers</a>
+          </div>
+
+          <div>
+            <strong>Legal</strong>
+
+            <a href="#privacy">
+              Privacy
+            </a>
+
+            <a href="#terms">
+              Terms
+            </a>
+
+            <a href="#cookies">
+              Cookies
+            </a>
           </div>
         </div>
       </div>
 
       <div className="footer-bottom">
-        © 2026 StoryFlix. All rights reserved.
+        <span>
+          © 2026 StoryFlix. All rights reserved.
+        </span>
+
+        <span>
+          Made for stories worth watching.
+        </span>
       </div>
     </footer>
   );
@@ -918,106 +1243,160 @@ function Footer() {
 
 function App() {
   return (
-    <BrowserRouter>
-      <div className="app">
-        <Header />
+    <div className="app">
+      <Header />
 
-        <Routes>
-          <Route path="/" element={<Home />} />
+      <Routes>
+        {/* HOME */}
+        <Route
+          path="/"
+          element={<Home />}
+        />
 
+        {/* MOVIES */}
+        <Route
+          path="/movies"
+          element={
+            <ListingPage
+              title="Movies"
+              description="Explore blockbuster movies, timeless classics and new favorites."
+              items={movies}
+              type="movies"
+            />
+          }
+        />
+
+        {/* SERIES */}
+        <Route
+          path="/series"
+          element={
+            <ListingPage
+              title="Series"
+              description="Discover binge-worthy series and unforgettable television."
+              items={series}
+              type="series"
+            />
+          }
+        />
+
+        {/* STORIES */}
+        <Route
+          path="/stories"
+          element={
+            <ListingPage
+              title="Stories"
+              description="Lose yourself in romance, fantasy, supernatural adventures and more."
+              items={stories}
+              type="stories"
+            />
+          }
+        />
+
+        {/* MOVIE DETAILS */}
+        {movies.map((movie) => (
           <Route
-            path="/movies"
+            key={`movie-${movie.id}`}
+            path={`/movies/${movie.id}`}
             element={
-              <ListingPage
-                title="Movies"
-                description="Explore blockbuster movies, timeless classics and new favorites."
-                items={movies}
+              <DetailPage
+                item={movie}
                 type="movies"
               />
             }
           />
+        ))}
 
+        {/* SERIES DETAILS */}
+        {series.map((show) => (
           <Route
-            path="/series"
+            key={`series-${show.id}`}
+            path={`/series/${show.id}`}
             element={
-              <ListingPage
-                title="Series"
-                description="Discover binge-worthy series and unforgettable television."
-                items={series}
+              <DetailPage
+                item={show}
                 type="series"
               />
             }
           />
+        ))}
 
-          <Route
-            path="/stories"
-            element={
-              <ListingPage
-                title="Stories"
-                description="Lose yourself in romance, fantasy, supernatural adventures and more."
-                items={stories}
-                type="stories"
-              />
-            }
-          />
-
-          {movies.map((movie) => (
+        {/* STORY DETAILS + CHAPTERS */}
+        {stories.map((story) => (
+          <React.Fragment
+            key={`story-${story.id}`}
+          >
             <Route
-              key={movie.id}
-              path={`/movies/${movie.id}`}
-              element={<DetailPage item={movie} type="movies" />}
+              path={`/stories/${story.id}`}
+              element={
+                <DetailPage
+                  item={story}
+                  type="stories"
+                />
+              }
             />
-          ))}
 
-          {series.map((show) => (
             <Route
-              key={show.id}
-              path={`/series/${show.id}`}
-              element={<DetailPage item={show} type="series" />}
+              path={`/stories/${story.id}/chapter/1`}
+              element={
+                <StoryReader
+                  story={story}
+                  chapter={1}
+                />
+              }
             />
-          ))}
 
-          {stories.map((story) => (
-            <React.Fragment key={story.id}>
-              <Route
-                path={`/stories/${story.id}`}
-                element={<DetailPage item={story} type="stories" />}
-              />
+            <Route
+              path={`/stories/${story.id}/chapter/2`}
+              element={
+                <StoryReader
+                  story={story}
+                  chapter={2}
+                />
+              }
+            />
+          </React.Fragment>
+        ))}
 
-              <Route
-                path={`/stories/${story.id}/chapter/1`}
-                element={<StoryReader story={story} />}
-              />
+        {/* SEARCH */}
+        <Route
+          path="/search"
+          element={<SearchPage />}
+        />
 
-              <Route
-                path={`/stories/${story.id}/chapter/2`}
-                element={<StoryReader story={story} />}
-              />
-            </React.Fragment>
-          ))}
+        {/* 404 */}
+        <Route
+          path="*"
+          element={
+            <main className="not-found">
+              <div>
+                <span className="section-kicker">
+                  404
+                </span>
 
-          <Route path="/search" element={<SearchPage />} />
+                <h1>
+                  Page not found
+                </h1>
 
-          <Route
-            path="*"
-            element={
-              <main className="not-found">
-                <div>
-                  <span className="section-kicker">404</span>
-                  <h1>Page not found</h1>
-                  <p>The page you're looking for doesn't exist.</p>
-                  <Link to="/" className="primary-btn">
-                    Back to Home
-                  </Link>
-                </div>
-              </main>
-            }
-          />
-        </Routes>
+                <p>
+                  The page you're looking for
+                  doesn't exist.
+                </p>
 
-        <Footer />
-      </div>
-    </BrowserRouter>
+                <Link
+                  to="/"
+                  className="primary-btn"
+                >
+                  <ArrowLeft size={18} />
+                  Back to Home
+                </Link>
+              </div>
+            </main>
+          }
+        />
+      </Routes>
+
+      <Footer />
+    </div>
   );
 }
 
