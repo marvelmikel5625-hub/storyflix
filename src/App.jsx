@@ -6,15 +6,33 @@ import Movies from "./pages/Movies";
 import Series from "./pages/Series";
 import Stories from "./pages/Stories";
 
+import MovieDetails from "./pages/MovieDetails";
+import SeriesDetails from "./pages/SeriesDetails";
+
 function App() {
   return (
     <div className="min-h-screen bg-[#070707] text-white">
+
       <Header />
 
       <Routes>
+
         <Route path="/" element={<Home />} />
+
         <Route path="/movies" element={<Movies />} />
+
+        <Route
+          path="/movies/:id"
+          element={<MovieDetails />}
+        />
+
         <Route path="/series" element={<Series />} />
+
+        <Route
+          path="/series/:id"
+          element={<SeriesDetails />}
+        />
+
         <Route path="/stories" element={<Stories />} />
 
         <Route
@@ -27,7 +45,9 @@ function App() {
             </div>
           }
         />
+
       </Routes>
+
     </div>
   );
 }
