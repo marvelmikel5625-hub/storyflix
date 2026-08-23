@@ -11,6 +11,7 @@ import Search from "./pages/Search";
 import MovieDetails from "./pages/MovieDetails";
 import SeriesDetails from "./pages/SeriesDetails";
 import StoryDetails from "./pages/StoryDetails";
+import ChapterReader from "./pages/ChapterReader";
 
 function NotFound() {
   return (
@@ -45,17 +46,14 @@ export default function App() {
       <Header />
 
       <Routes>
-        {/* =========================
-            HOME
-        ========================= */}
+
+        {/* HOME */}
         <Route
           path="/"
           element={<Home />}
         />
 
-        {/* =========================
-            MOVIES
-        ========================= */}
+        {/* MOVIES */}
         <Route
           path="/movies"
           element={<Movies />}
@@ -66,9 +64,7 @@ export default function App() {
           element={<MovieDetails />}
         />
 
-        {/* =========================
-            SERIES
-        ========================= */}
+        {/* SERIES */}
         <Route
           path="/series"
           element={<Series />}
@@ -79,9 +75,7 @@ export default function App() {
           element={<SeriesDetails />}
         />
 
-        {/* =========================
-            STORIES
-        ========================= */}
+        {/* STORIES */}
         <Route
           path="/stories"
           element={<Stories />}
@@ -92,21 +86,24 @@ export default function App() {
           element={<StoryDetails />}
         />
 
-        {/* =========================
-            SEARCH
-        ========================= */}
+        {/* CHAPTER READER */}
+        <Route
+          path="/stories/:id/chapter/:chapterId"
+          element={<ChapterReader />}
+        />
+
+        {/* SEARCH */}
         <Route
           path="/search"
           element={<Search />}
         />
 
-        {/* =========================
-            404
-        ========================= */}
+        {/* 404 */}
         <Route
           path="*"
           element={<NotFound />}
         />
+
       </Routes>
     </div>
   );
