@@ -15,26 +15,28 @@ import ChapterReader from "./pages/ChapterReader";
 
 function NotFound() {
   return (
-    <main className="flex min-h-[75vh] items-center justify-center bg-[#070707] px-5 text-white">
-      <div className="text-center">
-        <p className="text-sm font-bold uppercase tracking-[0.2em] text-red-500">
-          404
-        </p>
+    <main className="min-h-screen bg-[#050505] px-6 pt-32 text-white">
+      <div className="mx-auto flex min-h-[60vh] max-w-4xl items-center justify-center text-center">
+        <div>
+          <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] text-2xl">
+            404
+          </div>
 
-        <h1 className="mt-3 text-4xl font-black">
-          Page Not Found
-        </h1>
+          <h1 className="text-4xl font-black tracking-tight sm:text-6xl">
+            Page not found
+          </h1>
 
-        <p className="mt-3 text-sm text-zinc-500">
-          The page you're looking for doesn't exist.
-        </p>
+          <p className="mx-auto mt-4 max-w-md text-sm leading-6 text-zinc-500">
+            The page you're looking for doesn't exist or may have been moved.
+          </p>
 
-        <a
-          href="/"
-          className="mt-7 inline-flex rounded-lg bg-white px-6 py-3 text-sm font-bold text-black transition hover:bg-zinc-200"
-        >
-          Back to Home
-        </a>
+          <a
+            href="/"
+            className="mt-8 inline-flex rounded-xl bg-white px-7 py-3 text-sm font-bold text-black transition hover:scale-[1.02] hover:bg-zinc-200"
+          >
+            Back to StoryFlix
+          </a>
+        </div>
       </div>
     </main>
   );
@@ -42,68 +44,36 @@ function NotFound() {
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-[#070707] text-white">
+    <div className="min-h-screen bg-[#050505] text-white antialiased">
       <Header />
 
       <Routes>
+        {/* Home */}
+        <Route path="/" element={<Home />} />
 
-        {/* HOME */}
-        <Route
-          path="/"
-          element={<Home />}
-        />
+        {/* Movies */}
+        <Route path="/movies" element={<Movies />} />
+        <Route path="/movies/:id" element={<MovieDetails />} />
 
-        {/* MOVIES */}
-        <Route
-          path="/movies"
-          element={<Movies />}
-        />
+        {/* Series */}
+        <Route path="/series" element={<Series />} />
+        <Route path="/series/:id" element={<SeriesDetails />} />
 
-        <Route
-          path="/movies/:id"
-          element={<MovieDetails />}
-        />
+        {/* Stories */}
+        <Route path="/stories" element={<Stories />} />
+        <Route path="/stories/:id" element={<StoryDetails />} />
 
-        {/* SERIES */}
-        <Route
-          path="/series"
-          element={<Series />}
-        />
-
-        <Route
-          path="/series/:id"
-          element={<SeriesDetails />}
-        />
-
-        {/* STORIES */}
-        <Route
-          path="/stories"
-          element={<Stories />}
-        />
-
-        <Route
-          path="/stories/:id"
-          element={<StoryDetails />}
-        />
-
-        {/* CHAPTER READER */}
+        {/* Story reader */}
         <Route
           path="/stories/:id/chapter/:chapterId"
           element={<ChapterReader />}
         />
 
-        {/* SEARCH */}
-        <Route
-          path="/search"
-          element={<Search />}
-        />
+        {/* Search */}
+        <Route path="/search" element={<Search />} />
 
         {/* 404 */}
-        <Route
-          path="*"
-          element={<NotFound />}
-        />
-
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
   );
